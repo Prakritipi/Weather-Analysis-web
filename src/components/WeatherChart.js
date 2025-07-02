@@ -42,14 +42,49 @@ const WeatherChart = () => {
 
     const chartData = {
         labels: ['Today', 'Tomorrow', 'Day After Tomorrow'],
-        datasets: forecasts?.filter(f => f.data&& f.data.forecast && f.data.forecast.forecastday)
+        datasets: forecasts?.filter(f => f.data && f.data.forecast && f.data.forecast.forecastday)
             .map((forecast, i) => ({
-            label: cities[i],
-            data: forecast.data.forecast.forecastday.map((day) => day.day.avgtemp_c),
-            fill: false,
-            borderColor: `hsl(${i * 100}, 70%, 50%)`,
-            backgroundColor: 'transparent',
-        })),
+                label: cities[i],
+                data: forecast.data.forecast.forecastday.map((day) => day.day.avgtemp_c),
+                borderColor: `hsl(${i * 90}, 70%, 50%)`, // each line different color
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                borderWidth: 3,
+                tension: 0.3, // curve smoothness
+                pointBackgroundColor: 'white',
+                pointBorderColor: 'black',
+                pointRadius: 4,
+            })),
+    };
+
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+            title: {
+                display: true,
+                text: 'Weather Forecast Chart (°C)',
+            },
+        },
+        grid: {
+            display: false,
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Temperature (°C)',
+                },
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Days',
+                },
+            },
+        },
     };
 
     // console.log("Forecasts:", forecasts.map(f => f.data));
@@ -57,7 +92,12 @@ const WeatherChart = () => {
     return (
         <div className="weather-chart w-50% mx-auto my-10">
             <h2>Weather Forecast Chart (°C)</h2>
-            <Line data={chartData} />
+            <Line
+                data={chartData}
+                options={chartData}
+                width={800}
+                height={400}
+            />
         </div>
     );
 };
